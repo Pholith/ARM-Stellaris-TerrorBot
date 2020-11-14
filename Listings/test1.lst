@@ -1,0 +1,255 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;; RK 12/2012 - Evalbot (Cortex M3 de Texas Instrument)
+    2 00000000         ;; Les deux LEDs sont initialement allumées
+    3 00000000         ;; Ce programme lis l'état du bouton poussoir 1 connecté
+                       e au port GPIOD broche 6
+    4 00000000         ;; Si bouton poussoir fermé ==> fait clignoter les deux 
+                       LED1&2 connectée au port GPIOF broches 4&5.
+    5 00000000         
+    6 00000000                 AREA             |.text|, CODE, READONLY
+    7 00000000         
+    8 00000000         ; This register controls the clock gating logic in norma
+                       l Run mode
+    9 00000000 00001000 
+                       SYSCTL_PERIPH_I2C
+                               EQU              0x00001000
+   10 00000000         
+   11 00000000         ; Broches select
+   12 00000000         
+   13 00000000 40021000 
+                       I2C_BASE
+                               EQU              0x40021000
+   14 00000000         
+   15 00000000 00000001 
+                       I2CMTPR_BASE
+                               EQU              0x00000001
+   16 00000000 00000020 
+                       I2CMCS_BASE
+                               EQU              0x00000020
+   17 00000000 00000000 
+                       I2C_OTHER_BASE
+                               EQU              0x00000000
+   18 00000000         
+   19 00000000         ; blinking frequency
+   20 00000000 002FFFFF 
+                       DUREE   EQU              0x002FFFFF
+   21 00000000         
+   22 00000000         
+   23 00000000                 ENTRY
+   24 00000000                 EXPORT           __functionTest
+   25 00000000         __functionTest
+   26 00000000         
+   27 00000000 F44F 5680       ldr              r6, = SYSCTL_PERIPH_I2C
+   28 00000004         
+   29 00000004 F06F 4070       mov              r0, #0xFFFFFFF ;; Enable clock 
+                                                            sur GPIO D et F où 
+                                                            sont branchés les l
+                                                            eds (0x28 == 0b1010
+                                                            00)
+   30 00000008         ; ;;                              (GPIO::FEDCBA)
+   31 00000008         
+   32 00000008 6030            str              r0, [r6]
+   33 0000000A         
+   34 0000000A         ; ;; "There must be a delay of 3 system clocks before an
+                       y GPIO reg. access  (p413 datasheet de lm3s9B92.pdf)
+   35 0000000A BF00            nop                          ;; tres tres import
+                                                            ant....
+   36 0000000C BF00            nop
+   37 0000000E BF00            nop                          ;; pas necessaire e
+                                                            n simu ou en debbug
+                                                             step by step...
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   38 00000010         
+   39 00000010         
+   40 00000010         ; page 803 of sheet
+   41 00000010         ; -------  CONFIGURATION I2C
+   42 00000010         
+   43 00000010         
+   44 00000010         ; ------- END CONFIGURATION I2C
+   45 00000010         
+   46 00000010         
+   47 00000010         ;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CLIGNOTTEMENT
+   48 00000010         
+   49 00000010 6033            str              r3, [r6]    ;; Allume LED1&2 po
+                                                            rtF broche 4&5 : 00
+                                                            110000 (contenu de 
+                                                            r3)
+   50 00000012         
+   51 00000012         ReadState
+   52 00000012         
+   53 00000012 F8D7 A000       ldr              r10,[r7]
+   54 00000016 F1BA 0F00       CMP              r10,#0x00
+   55 0000001A D1FA            BNE              ReadState
+   56 0000001C         
+   57 0000001C         loop
+   58 0000001C 6032            str              r2, [r6]    ;; Eteint LED car r
+                                                            2 = 0x00      
+   59 0000001E 4904            ldr              r1, = DUREE ;; pour la duree de
+                                                             la boucle d'attent
+                                                            e1 (wait1)
+   60 00000020         
+   61 00000020 3901    wait1   subs             r1, #1
+   62 00000022 D1FD            bne              wait1
+   63 00000024         
+   64 00000024 6033            str              r3, [r6]    ;; Allume LED1&2 po
+                                                            rtF broche 4&5 : 00
+                                                            110000 (contenu de 
+                                                            r3)
+   65 00000026 4902            ldr              r1, = DUREE ;; pour la duree de
+                                                             la boucle d'attent
+                                                            e2 (wait2)
+   66 00000028         
+   67 00000028 3901    wait2   subs             r1, #1
+   68 0000002A D1FD            bne              wait2
+   69 0000002C         
+   70 0000002C E7F6            b                loop
+   71 0000002E         
+   72 0000002E         ; I2C SINGLE TRANSMISSION
+   73 0000002E         ; write slave address to I2CMSA
+   74 0000002E         ; write data to I2CMDR
+   75 0000002E         ; read I2CMCS
+   76 0000002E         ; if != 0 loop on read
+   77 0000002E         ; write ---0-111 to 12CMCS
+   78 0000002E         ; read I2CMCS
+   79 0000002E         ; if != 0 loop on read
+   80 0000002E         
+   81 0000002E         
+   82 0000002E         
+   83 0000002E BF00            nop
+   84 00000030                 END
+              002FFFFF 
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\test1.d -o.\objects\test1.o -I.\RTE\_Target_1 -IC:\Users
+\vince\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Users\vi
+nce\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\Device\ARM\ARMCM3\Include --predefi
+ne="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSI
+ON SETA 532" --predefine="_RTE_ SETA 1" --predefine="ARMCM3 SETA 1" --predefine
+="_RTE_ SETA 1" --list=.\listings\test1.lst test1.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 6 in file test1.s
+   Uses
+      None
+Comment: .text unused
+ReadState 00000012
+
+Symbol: ReadState
+   Definitions
+      At line 51 in file test1.s
+   Uses
+      At line 55 in file test1.s
+Comment: ReadState used once
+__functionTest 00000000
+
+Symbol: __functionTest
+   Definitions
+      At line 25 in file test1.s
+   Uses
+      At line 24 in file test1.s
+Comment: __functionTest used once
+loop 0000001C
+
+Symbol: loop
+   Definitions
+      At line 57 in file test1.s
+   Uses
+      At line 70 in file test1.s
+Comment: loop used once
+wait1 00000020
+
+Symbol: wait1
+   Definitions
+      At line 61 in file test1.s
+   Uses
+      At line 62 in file test1.s
+Comment: wait1 used once
+wait2 00000028
+
+Symbol: wait2
+   Definitions
+      At line 67 in file test1.s
+   Uses
+      At line 68 in file test1.s
+Comment: wait2 used once
+6 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+DUREE 002FFFFF
+
+Symbol: DUREE
+   Definitions
+      At line 20 in file test1.s
+   Uses
+      At line 59 in file test1.s
+      At line 65 in file test1.s
+
+I2CMCS_BASE 00000020
+
+Symbol: I2CMCS_BASE
+   Definitions
+      At line 16 in file test1.s
+   Uses
+      None
+Comment: I2CMCS_BASE unused
+I2CMTPR_BASE 00000001
+
+Symbol: I2CMTPR_BASE
+   Definitions
+      At line 15 in file test1.s
+   Uses
+      None
+Comment: I2CMTPR_BASE unused
+I2C_BASE 40021000
+
+Symbol: I2C_BASE
+   Definitions
+      At line 13 in file test1.s
+   Uses
+      None
+Comment: I2C_BASE unused
+I2C_OTHER_BASE 00000000
+
+Symbol: I2C_OTHER_BASE
+   Definitions
+      At line 17 in file test1.s
+   Uses
+      None
+Comment: I2C_OTHER_BASE unused
+SYSCTL_PERIPH_I2C 00001000
+
+Symbol: SYSCTL_PERIPH_I2C
+   Definitions
+      At line 9 in file test1.s
+   Uses
+      At line 27 in file test1.s
+Comment: SYSCTL_PERIPH_I2C used once
+6 symbols
+349 symbols in table
