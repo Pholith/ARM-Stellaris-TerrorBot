@@ -1,0 +1,81 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         
+    2 00000000         
+    3 00000000         
+    4 00000000                 AREA             |.text|, CODE, READONLY
+    5 00000000                 ENTRY
+    6 00000000         
+    7 00000000         ;; The EXPORT command specifies that a symbol can be acc
+                       essed by other shared objects or executables.
+    8 00000000                 EXPORT           WAIT_R8
+    9 00000000         
+   10 00000000         
+   11 00000000         
+   12 00000000         
+   13 00000000         
+   14 00000000         WAIT_R8                              ;;Wait for r8 Durat
+                                                            ion
+   15 00000000         
+   16 00000000 F1B8 0801 
+                       wait_a_bit
+                               subs             r8, #1
+   17 00000004 D1FC            bne              wait_a_bit
+   18 00000006 4770            BX               LR
+   19 00000008         
+   20 00000008         
+   21 00000008         
+   22 00000008         
+   23 00000008         END
+                       
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\timer.d -o.\objects\timer.o -I.\RTE\_Target_1 -IC:\Users
+\vince\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Users\vi
+nce\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\Device\ARM\ARMCM3\Include --predefi
+ne="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSI
+ON SETA 532" --predefine="_RTE_ SETA 1" --predefine="ARMCM3 SETA 1" --predefine
+="_RTE_ SETA 1" --list=.\listings\timer.lst Timer.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 4 in file Timer.s
+   Uses
+      None
+Comment: .text unused
+END 00000008
+
+Symbol: END
+   Definitions
+      At line 23 in file Timer.s
+   Uses
+      None
+Comment: END unused
+WAIT_R8 00000000
+
+Symbol: WAIT_R8
+   Definitions
+      At line 14 in file Timer.s
+   Uses
+      At line 8 in file Timer.s
+Comment: WAIT_R8 used once
+wait_a_bit 00000000
+
+Symbol: wait_a_bit
+   Definitions
+      At line 16 in file Timer.s
+   Uses
+      At line 17 in file Timer.s
+Comment: wait_a_bit used once
+4 symbols
+339 symbols in table

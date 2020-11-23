@@ -384,24 +384,24 @@
           <GroupName>Source Group 1</GroupName>
           <Files>
             <File>
-              <FileName>RK_Blinky_1LED.s</FileName>
+              <FileName>Engines.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\RK_Blinky_1LED.s</FilePath>
+              <FilePath>.\Engines.s</FilePath>
             </File>
             <File>
-              <FileName>test1.s</FileName>
+              <FileName>Leds.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\test1.s</FilePath>
+              <FilePath>.\Leds.s</FilePath>
             </File>
             <File>
-              <FileName>RK_Moteur.s</FileName>
+              <FileName>Main.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\RK_Moteur.s</FilePath>
+              <FilePath>.\Main.s</FilePath>
             </File>
             <File>
-              <FileName>RK_PriseEnMain_Moteurs.s</FileName>
+              <FileName>Timer.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\RK_PriseEnMain_Moteurs.s</FilePath>
+              <FilePath>.\Timer.s</FilePath>
             </File>
           </Files>
         </Group>
