@@ -58,7 +58,7 @@ LED_BLINK_FREQ 		EQU     0x001FFFFF
 		IMPORT	LEDS_INIT
 		IMPORT	LEDS_FORWARD_ON
 		IMPORT	LEDS_BACKWARD_ON
-		IMPORT	LEDS_BACKWARD_INVERSE
+		IMPORT	LEDS_BACKWARD_INVERT
 		IMPORT	LEDS_ON
 		IMPORT	LEDS_OFF
 
@@ -102,6 +102,8 @@ __main
 		;vvvvvvvvvvvvvvvvvvvvvvvFin configuration
 		
 		
+
+	
 	
 		
 		;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Switcher 1
@@ -117,6 +119,15 @@ __main
 		ldr r4, = GPIO_PORTE_BASE + (BUMPER<<2)  ;; @data Register = @base + (mask<<2) ==> Switcher
 		
 		;vvvvvvvvvvvvvvvvvvvvvvvFin configuration Switcher 
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 
@@ -165,21 +176,20 @@ ReadState
 		;;Wait until the bot is back to original position and blink leds
 
 		BL LEDS_BACKWARD_ON
+		mov r1, r9 ; Store total time to wait into r0
 		
+loop_moveBack		
+		ldr r8, = LED_BLINK_FREQ	
+		subs r1, r8					; totalTime -= blinkTime 
+		BL WAIT_R8 	 				; wait 1 blink	
 		
-; Pour faire clignoter les leds
-		;mov r7, r9
-;loopBack
-		;SUB r7, #0x1FFFFF
-		;BL LEDS_BACKWARD_INVERSE
-		;ldr r8, =LED_BLINK_FREQ
-		;BL WAIT_R8
-		;CMP r7, #0
-		;BPL loopBack
-
-
-		mov r8, r9
-		BL WAIT_R8
+		BL LEDS_BACKWARD_INVERT 	; blink leds. (Modify R0)		
+		ldr r8, =LED_BLINK_FREQ			
+		CMP r1, r8					
+		BGT loop_moveBack				; if totalTime > blinkTime: goto loopBack
+		
+		mov r8, r1
+		BL WAIT_R8					; wait remaining time
 
   
 		;;PART 4 : RUN
@@ -202,7 +212,7 @@ ReadState
 		BL MOTEUR_DROIT_INVERSE		
 		BL MOTEUR_GAUCHE_INVERSE		
 		
-		mov	r0, #0x0D0			;set the speed	
+		mov	r0, #0x0C8			;set the speed	
 		BL MOTEUR_SET_SPEED_R0
 		
 		ASR  r8, r9, #0x02 	; divide the distance by 2

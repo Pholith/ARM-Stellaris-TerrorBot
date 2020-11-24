@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\main.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\main.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Mon Nov 23 11:28:20 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Nov 24 18:44:00 2020
 <BR><P>
 <H3>Maximum Stack Usage =          0 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -27,7 +27,7 @@ Functions with no stack information
  <LI><a href="#[18]">LEDS_INIT</a>
  <LI><a href="#[26]">LEDS_FORWARD_ON</a>
  <LI><a href="#[27]">LEDS_BACKWARD_ON</a>
- <LI><a href="#[28]">LEDS_BACKWARD_INVERSE</a>
+ <LI><a href="#[28]">LEDS_BACKWARD_INVERT</a>
  <LI><a href="#[29]">LEDS_ON</a>
  <LI><a href="#[2a]">LEDS_OFF</a>
  <LI><a href="#[19]">__main</a>
@@ -139,24 +139,27 @@ Global Symbols
 
 <P><STRONG><a name="[27]"></a>LEDS_BACKWARD_ON</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, leds.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[19]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
-<LI><a href="#[28]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_BACKWARD_INVERSE
+<LI><a href="#[28]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_BACKWARD_INVERT
 </UL>
 
-<P><STRONG><a name="[28]"></a>LEDS_BACKWARD_INVERSE</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, leds.o(.text), UNUSED, KEPT)
+<P><STRONG><a name="[28]"></a>LEDS_BACKWARD_INVERT</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, leds.o(.text))
 <BR><BR>[Calls]<UL><LI><a href="#[2a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_OFF
 <LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_BACKWARD_ON
+</UL>
+<BR>[Called By]<UL><LI><a href="#[19]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
 </UL>
 
 <P><STRONG><a name="[29]"></a>LEDS_ON</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, leds.o(.text), UNUSED, KEPT)
 
 <P><STRONG><a name="[2a]"></a>LEDS_OFF</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, leds.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[19]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
-<LI><a href="#[28]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_BACKWARD_INVERSE
+<LI><a href="#[28]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_BACKWARD_INVERT
 </UL>
 
 <P><STRONG><a name="[19]"></a>__main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, main.o(.text))
 <BR><BR>[Calls]<UL><LI><a href="#[1a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WAIT_R8
 <LI><a href="#[2a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_OFF
+<LI><a href="#[28]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_BACKWARD_INVERT
 <LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_BACKWARD_ON
 <LI><a href="#[26]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_FORWARD_ON
 <LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_INIT

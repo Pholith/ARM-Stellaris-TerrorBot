@@ -75,7 +75,7 @@ ARM Macro Assembler    Page 2
    30 00000000                 EXPORT           LEDS_BACKWARD_ON
    31 00000000                 EXPORT           LEDS_ON
    32 00000000                 EXPORT           LEDS_OFF
-   33 00000000                 EXPORT           LEDS_BACKWARD_INVERSE
+   33 00000000                 EXPORT           LEDS_BACKWARD_INVERT
    34 00000000         
    35 00000000         
    36 00000000         LEDS_INIT
@@ -122,7 +122,7 @@ LL_PIN<<2)
    61 00000028 6028            str              r0, [r5]
    62 0000002A 4770            BX               LR
    63 0000002C         
-   64 0000002C         LEDS_BACKWARD_INVERSE
+   64 0000002C         LEDS_BACKWARD_INVERT
    65 0000002C 6828            ldr              r0, [r5]
    66 0000002E 2800            CMP              r0, #0
    67 00000030 D1FE            BNE              LEDS_BACKWARD_ON
@@ -153,12 +153,12 @@ ARM Macro Assembler    Page 3
               40025500 
               400253FC 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
-ork --depend=.\objects\leds.d -o.\objects\leds.o -I.\RTE\_Target_1 -IC:\Users\v
-ince\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Users\vinc
-e\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\Device\ARM\ARMCM3\Include --predefine
-="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION
- SETA 532" --predefine="_RTE_ SETA 1" --predefine="ARMCM3 SETA 1" --predefine="
-_RTE_ SETA 1" --list=.\listings\leds.lst Leds.s
+ork --depend=.\objects\leds.d -o.\objects\leds.o -I.\RTE\_Target_1 -IC:\Users\D
+arkvanus\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -IC:\Users\
+Darkvanus\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\Device\ARM\ARMCM3\Include --p
+redefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION
+_VERSION SETA 533" --predefine="_RTE_ SETA 1" --predefine="ARMCM3 SETA 1" --pre
+define="_RTE_ SETA 1" --list=.\listings\leds.lst Leds.s
 
 
 
@@ -181,14 +181,14 @@ Symbol: END
    Uses
       None
 Comment: END unused
-LEDS_BACKWARD_INVERSE 0000002C
+LEDS_BACKWARD_INVERT 0000002C
 
-Symbol: LEDS_BACKWARD_INVERSE
+Symbol: LEDS_BACKWARD_INVERT
    Definitions
       At line 64 in file Leds.s
    Uses
       At line 33 in file Leds.s
-Comment: LEDS_BACKWARD_INVERSE used once
+Comment: LEDS_BACKWARD_INVERT used once
 LEDS_BACKWARD_ON 00000024
 
 Symbol: LEDS_BACKWARD_ON

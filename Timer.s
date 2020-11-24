@@ -14,7 +14,7 @@
 WAIT_R8 				;;Wait for r8 Duration
 
 wait_a_bit	subs r8, #1
-        bne wait_a_bit
+        bpl wait_a_bit
 		BX	LR
 
 
