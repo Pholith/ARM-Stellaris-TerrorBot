@@ -11,14 +11,9 @@ SYSCTL_PERIPH_GPIO EQU		0x400FE108	; SYSCTL_RCGC2_R (p291 datasheet de lm3s9b92.
 
 
 ; The GPIODATA register is the data register
-GPIO_PORTD_BASE		EQU		0x40007000		; GPIO Port D (APB) base: 0x4000.7000 (p416 datasheet de lm3s9B92.pdf)
-
 GPIO_PORTE_BASE		EQU		0x40024000		; GPIO Port E
 
 ; configure the corresponding pin to be an output
-; all GPIO pins are inputs by default
-GPIO_O_DIR   		EQU 	0x00000400  ; GPIO Direction (p417 datasheet de lm3s9B92.pdf)
-
 
 ; Digital enable register
 ; To use the pin as a digital input or output, the corresponding GPIODEN bit must be set.
@@ -82,9 +77,7 @@ __main
 		; ;; Enable the Port F & D & E peripheral clock 		(p291 datasheet de lm3s9B96.pdf)
 		; ;;									
 		ldr r1, = SYSCTL_PERIPH_GPIO  			;; RCGC2
-        ; ;;mov r0, #0x00000028  					;; Enable clock sur GPIO D et F où sont branchés les leds (0x28 == 0b101000)
-		mov r0, #0x00000038  					;; Enable clock sur GPIO D et F où sont branchés les leds (0x28 == 0b111000)
-		; ;;														 									      (GPIO::FEDCBA)
+		mov r0, #0x00000038  					;; Enable clock sur GPIO F où sont branchés les leds												 									      (GPIO::FEDCBA)
         str r0, [r1]
 		
 		; ;; "There must be a delay of 3 system clocks before any GPIO reg. access  (p413 datasheet de lm3s9B92.pdf)
@@ -106,7 +99,7 @@ __main
 	
 	
 		
-		;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION Switcher 1
+		;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^CONFIGURATION des bumpers
 
 		ldr r1, = GPIO_PORTE_BASE+GPIO_I_PUR	;; Pul_up 
         ldr r0, = BUMPER		
@@ -116,9 +109,9 @@ __main
         ldr r0, = BUMPER	
         str r0, [r1]
 		
-		ldr r4, = GPIO_PORTE_BASE + (BUMPER<<2)  ;; @data Register = @base + (mask<<2) ==> Switcher
+		ldr r4, = GPIO_PORTE_BASE + (BUMPER<<2)  ;; @data Register = @base + (mask<<2) ==> bumpers
 		
-		;vvvvvvvvvvvvvvvvvvvvvvvFin configuration Switcher 
+		;vvvvvvvvvvvvvvvvvvvvvvvFin configuration bumpers 
 		
 		
 		
@@ -143,9 +136,7 @@ __main
 		
 		mov r9, #0x00 ;reset timer
 		
-ReadState
-
-		
+ReadState		
 		;;PART 2 : Waiting for bumper impact. 
 		
 		add r9, #3		; add 3 operation time elapsed
@@ -155,7 +146,7 @@ ReadState
 		BEQ ReadState	;// if (current bumper value == no bumper are colliding) goto ReadState;
 
 
-		;;PART 3 : Come back to orginnal position
+
 		
 		BL LEDS_OFF
 		BL MOTEUR_DROIT_OFF
@@ -164,6 +155,9 @@ ReadState
 		;;Wait a bit
 		ldr r8, = 0x002FFFFF 						
 		BL WAIT_R8
+
+
+		;;PART 3 : Come back to orginnal position
 
 		;;Go back
 		
@@ -175,7 +169,6 @@ ReadState
 
 		;;Wait until the bot is back to original position and blink leds
 
-		BL LEDS_BACKWARD_ON
 		mov r1, r9 ; Store total time to wait into r0
 		
 loop_moveBack		

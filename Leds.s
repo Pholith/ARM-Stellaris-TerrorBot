@@ -4,10 +4,14 @@
 
 
 ; Broches select
-LEDS_ALL_PIN		EQU		0xFF		; 11111111 All port 
+LEDS_PIN_INIT		EQU		0x3C		; 00111100 mask of all used leds
+										;(internet leds only activates if bit 3 & 4 are 0)						
 LEDS_FORWARD_PIN	EQU		0x3C		; 00111100 led1 & led2 on pin 5 & 6
-LEDS_BACKWARD_PIN	EQU		0x00		; 00000000 (internet leds activates if bit 3 & 4 are 0)
-LEDS_STOP_PIN		EQU		0x0C		; 00001100 
+LEDS_BACKWARD_PIN	EQU		0x00		; 00000000 internet1 & internet2 on pin 3 & 4 when 0
+	
+LEDS_ALL_PIN		EQU		0x30		; 00110000 Active all leds (Forward & backward)
+LEDS_STOP_PIN		EQU		0x0C		; 00001100 Stop all leds
+
 
 
 
@@ -35,18 +39,18 @@ GPIO_O_DEN  		EQU 	0x0000051C  ; GPIO Digital Enable (p437 datasheet de lm3s9B92
 	
 LEDS_INIT
         ldr r6, = GPIO_PORTF_BASE+GPIO_O_DIR    ;; 1 Pin du portF en sortie (broche 4 : 00010000)
-        ldr r0, = LEDS_ALL_PIN 	
+        ldr r0, = LEDS_PIN_INIT 	
         str r0, [r6]
 		
 		ldr r6, = GPIO_PORTF_BASE+GPIO_O_DEN	;; Enable Digital Function 
-        ldr r0, = LEDS_ALL_PIN		
+        ldr r0, = LEDS_PIN_INIT		
         str r0, [r6]
 		
 		ldr r6, = GPIO_PORTF_BASE+GPIO_O_DR2R	;; Choix de l'intensité de sortie (2mA)
-        ldr r0, = LEDS_ALL_PIN			
+        ldr r0, = LEDS_PIN_INIT			
         str r0, [r6]
 		
-		ldr r5, = GPIO_PORTF_BASE + (LEDS_ALL_PIN<<2)  ;; @data Register = @base + (mask<<2) ==> LED1
+		ldr r5, = GPIO_PORTF_BASE + (LEDS_PIN_INIT<<2)  ;; @data Register = @base + (mask<<2)
 		
 		BX	LR	; FIN du sous programme d'init.
 	
