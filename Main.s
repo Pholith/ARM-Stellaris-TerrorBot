@@ -60,14 +60,14 @@ LED_BLINK_FREQ 		EQU     0x001FFFFF
 		IMPORT	WAIT_R8
 		
 ; Register usage : 
-;	r0: 
-;	r1: 
-;	r2:	timer calc
-;	r3:	
+;	r0: Utils
+;	r1: Utils
+;	r2:	Unused
+;	r3:	Unused
 ;	r4:	Bumper 1
 ;	r5:	Leds address
 ;	r6:	Engines address
-;	r7:	
+;	r7:	Unused
 ;	r8:	Used by Timers.s
 ;	r9:	Time calculation
 
